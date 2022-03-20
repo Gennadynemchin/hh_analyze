@@ -27,10 +27,12 @@ def main():
             vacancies = get_vacancies('https://api.hh.ru/vacancies', 'Python', area_Moscow, 1, page)
             count = 0
             for vacancy in vacancies['items']:
-                print(vacancy['name'], vacancy['salary'])
+                print(vacancy)
                 count += 1
             page += 1
             print(f'Page: {page}, elements: {count}')
+            if count < 100:
+                break
         except requests.exceptions.HTTPError:
             break
 
