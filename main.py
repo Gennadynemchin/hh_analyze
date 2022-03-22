@@ -20,15 +20,20 @@ def main():
     languages = ['Go', 'C', 'C#', 'C++', 'PHP', 'Ruby', 'Python', 'Java', 'JavaScript']
     page = 0
     count = 0
+    count_language = 0
     while True:
-        vacancies = get_vacancies('https://api.hh.ru/vacancies', 'Программист Python', 1, 30, page)
+        vacancies = get_vacancies('https://api.hh.ru/vacancies', f'{languages[count_language]}', 1, 3, page)
         for vacancy in vacancies['items']:
             print(vacancy.get('name'), vacancy.get('salary'))
             count += 1
         page += 1
-        print(f'Page: {page}, elements: {count}')
+        print(f'Page: {page}, elements: {count}, {languages[count_language]}')
         if page == vacancies['pages']:
-            break
+            count_language += 1
+            page = 0
+            count = 0
+
+
 
 
 if __name__ == '__main__':
