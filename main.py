@@ -9,7 +9,15 @@ def get_vacancies(url, vacancy, area, period, page):
               'period': period,
               'per_page': 100,
               'page': page,
-              'only_with_salary': 'true'}
+              'only_with_salary': 'true',
+              'role_id': 96}
+    response = requests.get(url, params=params)
+    response.raise_for_status()
+    return response.json()
+
+def get_role(url, text):
+    url=url
+    params = {'text': text}
     response = requests.get(url, params=params)
     response.raise_for_status()
     return response.json()
@@ -37,4 +45,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    print(get_role('https://api.hh.ru/suggests/professional_roles', 'Программист'))
