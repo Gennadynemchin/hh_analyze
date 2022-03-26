@@ -33,7 +33,7 @@ def get_from_hh(languages):
             vacancies = get_vacancies(get_role('Программист'), languages[count_language], 1, 3, page)
             for vacancy in vacancies['items']:
                 if vacancy.get('salary')['currency'] == 'RUR':
-                    output[vacancy.get('name')] = vacancy.get('salary')
+                    output[(languages[count_language], vacancy.get('name'))] = vacancy.get('salary')
                     count += 1
             page += 1
             if page == vacancies['pages']:
