@@ -25,31 +25,29 @@ def get_vacancies(role, language, area, period, page):
     return response.json()
 
 
-def hh_analyze(languages):
-    page = 0
-    count = 0
-    count_language = 0
+def get_from_hh(languages):
+    page, count, count_language = 0, 0, 0
+    output = {}
     try:
         while True:
             vacancies = get_vacancies(get_role('Программист'), languages[count_language], 1, 3, page)
             for vacancy in vacancies['items']:
-                print(vacancy.get('name'), vacancy.get('salary'))
-                count += 1
+                if vacancy.get('salary')['currency'] == 'RUR':
+                    output[vacancy.get('name')] = vacancy.get('salary')
+                    count += 1
             page += 1
-            print(f'Page: {page}, elements: {count}, {languages[count_language]}')
             if page == vacancies['pages']:
                 count_language += 1
-                page = 0
-                count = 0
+                page, count = 0, 0
     except IndexError:
-        return
+        return output
 
 
 
 def main():
     load_dotenv()
     languages = ['Go', 'C', 'C#', 'C++', 'PHP', 'Ruby', 'Python', 'Java', 'JavaScript']
-    hh_analyze(languages)
+    print(get_from_hh(languages))
 
 
 if __name__ == '__main__':
