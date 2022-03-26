@@ -30,10 +30,10 @@ def get_from_hh(languages):
     output = {}
     try:
         while True:
-            vacancies = get_vacancies(get_role('Программист'), languages[count_language], 1, 3, page)
+            vacancies = get_vacancies(get_role('Программист'), languages[count_language], 1, 1, page)
             for vacancy in vacancies['items']:
                 if vacancy.get('salary')['currency'] == 'RUR':
-                    output[(languages[count_language], vacancy.get('name'))] = vacancy.get('salary')
+                    output[languages[count_language],count] = vacancy.get('salary')
                     count += 1
             page += 1
             if page == vacancies['pages']:
@@ -47,7 +47,9 @@ def get_from_hh(languages):
 def main():
     load_dotenv()
     languages = ['Go', 'C', 'C#', 'C++', 'PHP', 'Ruby', 'Python', 'Java', 'JavaScript']
-    print(get_from_hh(languages))
+    output_vacancies = get_from_hh(languages)
+    for lang_num, salary in output_vacancies.items():
+        print(lang_num[0], salary)
 
 
 if __name__ == '__main__':
