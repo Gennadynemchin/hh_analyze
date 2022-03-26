@@ -2,25 +2,38 @@ import requests
 from dotenv import load_dotenv
 
 
-def get_vacancies(url, vacancy, area, period, page):
-    url = url
-    params = {'text': vacancy,
+def get_role(text):
+    url = 'https://api.hh.ru/suggests/professional_roles'
+    params = {'text': text}
+    response = requests.get(url, params=params)
+    response.raise_for_status()
+    return response.json()['items'][0]['id']
+
+
+def get_vacancies(role, language, area, period, page):
+    url = 'https://api.hh.ru/vacancies'
+    params = {'text': language,
               'area': area,
               'period': period,
               'per_page': 100,
               'page': page,
               'only_with_salary': 'true',
-              'role_id': 96}
+              'professional_role': role}
+
     response = requests.get(url, params=params)
     response.raise_for_status()
     return response.json()
 
-def get_role(url, text):
-    url=url
-    params = {'text': text}
-    response = requests.get(url, params=params)
-    response.raise_for_status()
-    return response.json()
+'''
+def hh_analyze(languages):
+    page = 0
+    count = 0
+    count_language = 0
+    while True:
+'''
+
+
+
 
 
 def main():
@@ -30,7 +43,7 @@ def main():
     count = 0
     count_language = 0
     while True:
-        vacancies = get_vacancies('https://api.hh.ru/vacancies', f'{languages[count_language]}', 1, 3, page)
+        vacancies = get_vacancies(get_role('Программист'), languages[count_language], 1, 3, page)
         for vacancy in vacancies['items']:
             print(vacancy.get('name'), vacancy.get('salary'))
             count += 1
@@ -42,7 +55,5 @@ def main():
             count = 0
 
 
-
-
 if __name__ == '__main__':
-    print(get_role('https://api.hh.ru/suggests/professional_roles', 'Программист'))
+    main()
