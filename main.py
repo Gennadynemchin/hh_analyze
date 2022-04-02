@@ -18,6 +18,7 @@ def get_vacancies(role, language, area, period, page):
               'per_page': 100,
               'page': page,
               'only_with_salary': 'true',
+              'currency': 'RUR',
               'professional_role': role}
 
     response = requests.get(url, params=params)
@@ -32,9 +33,8 @@ def get_from_hh(languages):
         while True:
             vacancies = get_vacancies(get_role('Программист'), languages[count_language], 1, 1, page)
             for vacancy in vacancies['items']:
-                if vacancy.get('salary')['currency'] == 'RUR':
-                    output[languages[count_language],count] = vacancy.get('salary')
-                    count += 1
+                output[languages[count_language],count] = vacancy.get('salary')
+                count += 1
             page += 1
             if page == vacancies['pages']:
                 count_language += 1
