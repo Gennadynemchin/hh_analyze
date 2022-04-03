@@ -70,8 +70,8 @@ def main():
             lang_salary[language] = int(result_salary)
             counter += 1
         else:
-            counter += 1
             lang_salary[language] = int(lang_salary[language]) + int(result_salary)
+            counter += 1
         print(language, counter)
     print(lang_salary)
 
