@@ -58,7 +58,6 @@ def predict_rub_salary(vacancy):
 def main():
     load_dotenv()
     lang_salary = {}
-    counter = 0
     languages = ['Go', 'C', 'C#', 'C++', 'PHP', 'Ruby', 'Python', 'Java', 'JavaScript']
     output_vacancies = get_from_hh(languages)
     for lang_num, salary in output_vacancies.items():
