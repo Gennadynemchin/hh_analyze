@@ -44,7 +44,6 @@ def get_from_hh(languages):
 
 
 def predict_rub_salary(vacancy):
-    predicted = {}
     if vacancy['currency'] != 'RUR':
         result = 0
     elif vacancy['from'] and vacancy['to']:
