@@ -66,12 +66,13 @@ def main():
         language = lang_num[0]
         result_salary = predict_rub_salary(salary)
         if language not in lang_salary.keys():
-            counter=0
+            counter = 0
             lang_salary[language] = int(result_salary)
+            counter += 1
         else:
-            counter+=1
+            counter += 1
             lang_salary[language] = int(lang_salary[language]) + int(result_salary)
-            print(language, counter)
+        print(language, counter)
     print(lang_salary)
 
 if __name__ == '__main__':
