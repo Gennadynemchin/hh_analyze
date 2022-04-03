@@ -62,8 +62,7 @@ def main():
     output_vacancies = get_from_hh(languages)
     for lang_num, salary in output_vacancies.items():
         language = lang_num[0]
-        lang_count = lang_num[1]
-        print(lang_count+1)
+        lang_count = lang_num[1] #можно использовать как каунтер
         result_salary = predict_rub_salary(salary)
         if language not in lang_salary.keys():
             counter = 0
