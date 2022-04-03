@@ -45,31 +45,35 @@ def get_from_hh(languages):
 
 def predict_rub_salary(vacancy):
     predicted = {}
-    if vacancy['from'] and vacancy['to']:
+    if vacancy['currency'] != 'RUR':
+        result = None
+    elif vacancy['from'] and vacancy['to']:
         result = (int(vacancy['from']) + int(vacancy['to'])) / 2
     elif not vacancy['to']:
         result = (int(vacancy['from'])) * 1.2
     elif not vacancy['from']:
         result = (int(vacancy['to'])) * 0.8
-    elif vacancy['currency'] != 'RUR':
-        result = None
-
     return result
 
 
 def main():
-    lang_salary = {}
     load_dotenv()
+    lang_salary = {}
+    salary_array = []
+    counter = 0
     languages = ['Go', 'C', 'C#', 'C++', 'PHP', 'Ruby', 'Python', 'Java', 'JavaScript']
     output_vacancies = get_from_hh(languages)
     for lang_num, salary in output_vacancies.items():
-        language, salary = lang_num[0], predict_rub_salary(salary)
-        if language not in lang_salary.keys():
-            lang_salary[language] = salary
-        else:
-            lang_salary[language] += salary
+        language = lang_num[0]
+        result_salary = predict_rub_salary(salary)
+        try:
+            if language not in lang_salary.keys():
+                lang_salary[language] = result_salary
+            else:
+                lang_salary[language] = lang_salary[language] + result_salary
+        except TypeError:
+            pass
     print(lang_salary)
-
 
 if __name__ == '__main__':
     main()
