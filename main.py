@@ -44,11 +44,7 @@ def get_from_hh(languages):
 
 
 def predict_rub_salary(vacancy):
-    '''
-    Если указаны оба поля “от” и “до”, считайте ожидаемый оклад как среднее.
-    Если только “от”, умножайте на 1.2, а если только “до”, умножайте на 0.8
-    Если в вакансии не рубли -> None
-    '''
+    predicted = {}
     if vacancy['from'] and vacancy['to']:
         result = (int(vacancy['from']) + int(vacancy['to'])) / 2
     elif not vacancy['to']:
@@ -57,15 +53,22 @@ def predict_rub_salary(vacancy):
         result = (int(vacancy['to'])) * 0.8
     elif vacancy['currency'] != 'RUR':
         result = None
+
     return result
 
 
 def main():
+    lang_salary = {}
     load_dotenv()
     languages = ['Go', 'C', 'C#', 'C++', 'PHP', 'Ruby', 'Python', 'Java', 'JavaScript']
     output_vacancies = get_from_hh(languages)
     for lang_num, salary in output_vacancies.items():
-        predict_rub_salary(salary)
+        language, salary = lang_num[0], predict_rub_salary(salary)
+        if language not in lang_salary.keys():
+            lang_salary[language] = salary
+        else:
+            lang_salary[language] += salary
+    print(lang_salary)
 
 
 if __name__ == '__main__':
