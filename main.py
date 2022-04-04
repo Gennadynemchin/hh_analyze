@@ -1,4 +1,6 @@
 import requests
+from collections import Counter
+from collections import defaultdict
 from dotenv import load_dotenv
 
 
@@ -58,19 +60,21 @@ def predict_rub_salary(vacancy):
 def main():
     load_dotenv()
     lang_salary = {}
+    none_results = []
     languages = ['Go', 'C', 'C#', 'C++', 'PHP', 'Ruby', 'Python', 'Java', 'JavaScript']
     output_vacancies = get_from_hh(languages)
     for lang_num, salary in output_vacancies.items():
         language = lang_num[0]
         lang_count = lang_num[1] + 1
         result_salary = predict_rub_salary(salary)
+        if result_salary is None:
+            none_results.append(language)
         if language not in lang_salary.keys():
-            lang_salary[language] = {'salary': int(result_salary or 0), 'counter': lang_count}
+            lang_salary[language] = {'salary': int(result_salary or 0), 'total_vacancies': lang_count}
         else:
             lang_salary[language]['salary'] += int(result_salary or 0)
-            lang_salary[language]['counter'] = lang_count
-        print(language, lang_count, result_salary)
-    print(lang_salary)
+            lang_salary[language]['total_vacancies'] = lang_count
+    print(none_results)
 
 if __name__ == '__main__':
     main()
