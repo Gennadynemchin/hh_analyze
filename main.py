@@ -65,6 +65,39 @@ def main():
         lang_count = lang_num[1] + 1
         result_salary = predict_rub_salary(salary)
         if language not in lang_salary.keys():
+            lang_salary[language] = {'salary': int(result_salary), 'counter': lang_count}
+        else:
+            lang_salary[language]['salary'] += int(result_salary)
+            lang_salary[language]['counter'] = lang_count
+        print(language, lang_count)
+    print(lang_salary)
+
+if __name__ == '__main__':
+    main()
+
+
+
+
+
+
+
+
+
+
+
+
+
+'''
+def main():
+    load_dotenv()
+    lang_salary = {}
+    languages = ['Go', 'C', 'C#', 'C++', 'PHP', 'Ruby', 'Python', 'Java', 'JavaScript']
+    output_vacancies = get_from_hh(languages)
+    for lang_num, salary in output_vacancies.items():
+        language = lang_num[0]
+        lang_count = lang_num[1] + 1
+        result_salary = predict_rub_salary(salary)
+        if language not in lang_salary.keys():
             lang_salary[language] = int(result_salary)
         else:
             lang_salary[language] = int(lang_salary[language]) + int(result_salary)
@@ -73,3 +106,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+'''
