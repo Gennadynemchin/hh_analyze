@@ -45,7 +45,7 @@ def get_from_hh(languages):
 
 def predict_rub_salary(vacancy):
     if vacancy['currency'] != 'RUR':
-        result = 0
+        result = None
     elif vacancy['from'] and vacancy['to']:
         result = (int(vacancy['from']) + int(vacancy['to'])) / 2
     elif not vacancy['to']:
@@ -66,10 +66,12 @@ def main():
         result_salary = predict_rub_salary(salary)
         if language not in lang_salary.keys():
             lang_salary[language] = {'salary': int(result_salary), 'counter': lang_count}
+        elif result_salary == None:
+            print('OOPS')
         else:
             lang_salary[language]['salary'] += int(result_salary)
             lang_salary[language]['counter'] = lang_count
-        print(language, lang_count)
+        print(language, lang_count, result_salary)
     print(lang_salary)
 
 if __name__ == '__main__':
