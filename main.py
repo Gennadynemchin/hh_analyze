@@ -1,9 +1,12 @@
 import requests
 from collections import Counter
 from collections import defaultdict
-from dotenv import load_dotenv
 
 
+# from dotenv import load_dotenv
+
+
+# get role ID for requested vacancy
 def get_role(text):
     url = 'https://api.hh.ru/suggests/professional_roles'
     params = {'text': text}
@@ -12,6 +15,7 @@ def get_role(text):
     return response.json()['items'][0]['id']
 
 
+# get filtered vacancies
 def get_vacancies(role, language, area, period, page):
     url = 'https://api.hh.ru/vacancies'
     params = {'text': language,
@@ -28,23 +32,6 @@ def get_vacancies(role, language, area, period, page):
     return response.json()
 
 
-def get_from_hh(languages):
-    page, count, count_language = 0, 0, 0
-    output = {}
-    try:
-        while True:
-            vacancies = get_vacancies(get_role('Программист'), languages[count_language], 1, 1, page)
-            for vacancy in vacancies['items']:
-                output[languages[count_language],count] = vacancy.get('salary')
-                count += 1
-            page += 1
-            if page == vacancies['pages']:
-                count_language += 1
-                page, count = 0, 0
-    except IndexError:
-        return output
-
-
 def predict_rub_salary(vacancy):
     if vacancy['currency'] != 'RUR':
         result = None
@@ -57,24 +44,47 @@ def predict_rub_salary(vacancy):
     return result
 
 
-def main():
-    load_dotenv()
-    lang_salary = {}
-    none_results = []
+def get_raw_hh(languages):
+    page, count, count_language = 0, 0, 0
+    output = {}
+    try:
+        while True:
+            vacancies = get_vacancies(get_role('Программист'), languages[count_language], 1, 1, page)
+            for vacancy in vacancies['items']:
+                output[languages[count_language], count] = vacancy.get('salary')
+                count += 1
+            page += 1
+            if page == vacancies['pages']:
+                count_language += 1
+                page, count = 0, 0
+    except IndexError:
+        return output
+
+
+def get_filtered_hh():
+    lang_salary, none_results = {}, []
     languages = ['Go', 'C', 'C#', 'C++', 'PHP', 'Ruby', 'Python', 'Java', 'JavaScript']
-    output_vacancies = get_from_hh(languages)
-    for lang_num, salary in output_vacancies.items():
-        language = lang_num[0]
-        lang_count = lang_num[1] + 1
+    for lang_num, salary in get_raw_hh(languages).items():
         result_salary = predict_rub_salary(salary)
         if result_salary is None:
-            none_results.append(language)
-        if language not in lang_salary.keys():
-            lang_salary[language] = {'salary': int(result_salary or 0), 'total_vacancies': lang_count}
+            none_results.append(lang_num[0])
+        if lang_num[0] not in lang_salary.keys():
+            lang_salary[lang_num[0]] = {'sum_salary': int(result_salary or 0), 'total_vacancies': lang_num[1] + 1}
         else:
-            lang_salary[language]['salary'] += int(result_salary or 0)
-            lang_salary[language]['total_vacancies'] = lang_count
-    print(none_results)
+            lang_salary[lang_num[0]]['sum_salary'] += int(result_salary or 0)
+            lang_salary[lang_num[0]]['total_vacancies'] = lang_num[1] + 1
+        lang_salary[lang_num[0]]['none'] = dict(Counter(none_results)).get(lang_num[0])
+        lang_salary[lang_num[0]]['processed_vacancies'] = lang_salary[lang_num[0]]['total_vacancies'] - int(
+            lang_salary[lang_num[0]]['none'] or 0)
+        lang_salary[lang_num[0]]['mean_salary'] = lang_salary[lang_num[0]]['sum_salary'] / (
+                    lang_salary[lang_num[0]]['processed_vacancies'] or 1)
+    return lang_salary
+
+
+def main():
+    # load_dotenv()
+    print(get_filtered_hh())
+
 
 if __name__ == '__main__':
     main()
