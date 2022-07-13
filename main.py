@@ -5,7 +5,6 @@ from collections import defaultdict
 
 # from dotenv import load_dotenv
 
-
 # get role ID for requested vacancy
 def get_role(text):
     url = 'https://api.hh.ru/suggests/professional_roles'
