@@ -1,11 +1,8 @@
 import os
-
 import requests
 from collections import Counter
 from dotenv import load_dotenv
 
-
-# from dotenv import load_dotenv
 
 # get role ID for requested vacancy
 def get_role(text):
