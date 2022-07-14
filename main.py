@@ -3,7 +3,6 @@ import os
 import requests
 from collections import Counter
 from dotenv import load_dotenv
-from collections import defaultdict
 
 
 # from dotenv import load_dotenv
@@ -85,8 +84,8 @@ def get_filtered_hh():
 
 def get_superjob(token, keyword):
     url = 'https://api.superjob.ru/2.0/vacancies'
-    headers = {'X-Api-App-Id' : token}
-    params = {'keyword' : keyword}
+    headers = {'X-Api-App-Id': token}
+    params = {'keyword': keyword}
     response = requests.get(url, headers=headers, params=params)
     response.raise_for_status()
     return response.json()
