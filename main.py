@@ -95,6 +95,5 @@ def main():
     print(get_superjob(superjob_token, 'Программист'))
 
 
-
 if __name__ == '__main__':
     main()
