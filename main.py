@@ -91,8 +91,9 @@ def get_superjob(token, keyword):
 def main():
     load_dotenv()
     superjob_token = os.getenv('SUPERJOBTOKEN')
-    print(get_filtered_hh())
+    #print(get_filtered_hh())
     print(get_superjob(superjob_token, 'Программист'))
+
 
 
 if __name__ == '__main__':
