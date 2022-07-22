@@ -79,20 +79,27 @@ def get_filtered_hh():
     return lang_salary
 
 
-def get_superjob(token, keyword):
+def get_superjob(token, keyword, town):
     url = 'https://api.superjob.ru/2.0/vacancies'
     headers = {'X-Api-App-Id': token}
-    params = {'keyword': keyword}
+    params = {'keyword': keyword, 'town': town}
     response = requests.get(url, headers=headers, params=params)
     response.raise_for_status()
-    return response.json()
+    result = response.json()['objects']
+    return result
+
+
+def superjob_parse(result):
+    for x in result:
+        print(f"{x['profession']}, {x['town']['title']}")
 
 
 def main():
     load_dotenv()
     superjob_token = os.getenv('SUPERJOBTOKEN')
     #print(get_filtered_hh())
-    print(get_superjob(superjob_token, 'Программист'))
+    result = get_superjob(superjob_token, 'Программист', 'Москва')
+    superjob_parse(result)
 
 
 if __name__ == '__main__':
