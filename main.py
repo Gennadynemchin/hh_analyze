@@ -91,7 +91,9 @@ def get_superjob(token, keyword, town):
 
 def superjob_parse(result):
     for x in result:
-        print(f"{x['profession']}, {x['town']['title']}")
+        position = x['profession']
+        town = x['town']['title']
+        print(f"{position}, {town}")
 
 
 def main():
